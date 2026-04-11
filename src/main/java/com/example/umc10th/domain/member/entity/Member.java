@@ -2,6 +2,7 @@ package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.enums.Gender;
 import com.example.umc10th.domain.member.enums.ProviderType;
+import com.example.umc10th.domain.member.enums.Role;
 import com.example.umc10th.domain.member.enums.Status;
 import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -41,6 +42,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 10, nullable = false)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 10, nullable = false)
+    private Role role;
 
     @Column(name = "point", nullable = false)
     private Integer point = 0;
