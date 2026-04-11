@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -52,17 +54,13 @@ public class Member extends BaseEntity {
     @Column(name = "email", length = 255, nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "provider_type", length = 20, nullable = false)
-    private ProviderType providerType;
-
-    @Column(name = "provider_uid", length = 255)
-    private String providerUid;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberAuth> memberAuthList = new ArrayList<>();
 }
