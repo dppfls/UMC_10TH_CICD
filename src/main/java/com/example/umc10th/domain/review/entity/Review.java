@@ -33,6 +33,7 @@ public class Review extends BaseEntity {
     @Column(name = "star", precision = 2, scale = 1, nullable = false)
     private BigDecimal star;
 
+    @Lob
     @Column(name = "content", nullable = false)
     private String content;
 

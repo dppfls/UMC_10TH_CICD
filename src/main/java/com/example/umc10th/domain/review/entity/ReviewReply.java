@@ -20,6 +20,7 @@ public class ReviewReply {
     @JoinColumn(name = "review_id", nullable = false, unique = true)
     private Review review;
 
+    @Lob
     @Column(name = "content", nullable = false)
     private String content;
 }

@@ -21,6 +21,7 @@ public class Term extends BaseEntity {
     @Column(name = "name", length = 255, nullable = false)
     private String name;
 
+    @Lob
     @Column(name = "content", nullable = false)
     private String content;
 
