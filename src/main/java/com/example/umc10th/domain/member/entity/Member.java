@@ -1,9 +1,9 @@
 package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.enums.Gender;
-import com.example.umc10th.domain.member.enums.ProviderType;
 import com.example.umc10th.domain.member.enums.Role;
 import com.example.umc10th.domain.member.enums.Status;
+import com.example.umc10th.domain.region.entity.Region;
 import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

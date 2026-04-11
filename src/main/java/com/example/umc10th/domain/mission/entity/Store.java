@@ -1,6 +1,6 @@
 package com.example.umc10th.domain.mission.entity;
 
-import com.example.umc10th.domain.member.entity.Region;
+import com.example.umc10th.domain.region.entity.Region;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

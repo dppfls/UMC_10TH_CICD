@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.member.entity;
+package com.example.umc10th.domain.region.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
