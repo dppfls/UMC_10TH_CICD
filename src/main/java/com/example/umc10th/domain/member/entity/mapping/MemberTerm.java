@@ -2,6 +2,7 @@ package com.example.umc10th.domain.member.entity.mapping;
 
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.entity.Term;
+import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(columnNames = {"member_id", "term_id"})
         }
 )
-public class MemberTerm {
+public class MemberTerm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +36,4 @@ public class MemberTerm {
 
     @Column(name = "is_agreed", nullable = false)
     private Boolean isAgreed;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 }
