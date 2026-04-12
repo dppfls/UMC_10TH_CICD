@@ -1,14 +1,12 @@
 package com.example.umc10th.domain.member.converter;
 
-import com.example.umc10th.domain.member.dto.SignUpResDTO;
-import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
 
 public class MemberConverter {
+
     private MemberConverter() {}
 
-    public static SignUpResDTO toSignUpResponse(Member member) {
-        return new SignUpResDTO(
-                member.getId()
-        );
+    public static SignUpResDTO toSignUpResDTO(Long memberId) {
+        return new SignUpResDTO(memberId);
     }
 }
