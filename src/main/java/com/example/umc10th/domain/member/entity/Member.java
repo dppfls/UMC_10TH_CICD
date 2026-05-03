@@ -68,4 +68,10 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberAuth> memberAuthList = new ArrayList<>();
+
+    public static Member createTempMember(Long id) {
+        Member member = new Member();
+        member.id = id;
+        return member;
+    }
 }
