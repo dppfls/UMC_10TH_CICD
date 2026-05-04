@@ -3,6 +3,7 @@ package com.example.umc10th.domain.mission.converter;
 import com.example.umc10th.domain.mission.dto.response.HomeResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionListResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionStatusUpdateResDTO;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 
 import java.util.List;
 
@@ -77,5 +78,20 @@ public class MissionConverter {
             String status
     ) {
         return new MissionStatusUpdateResDTO(missionId, status);
+    }
+
+    public static MissionListResDTO.MissionPreview toMissionPreview(
+            MemberMission memberMission
+    ) {
+        String status = memberMission.getIsComplete() ? "COMPLETED" : "IN_PROGRESS";
+
+        return new MissionListResDTO.MissionPreview(
+                memberMission.getMission().getId(),
+                memberMission.getMission().getStore().getName(),
+                memberMission.getMission().getCondition(),
+                memberMission.getMission().getPoint(),
+                memberMission.getMission().getEndedAt().toString(),
+                status
+        );
     }
 }

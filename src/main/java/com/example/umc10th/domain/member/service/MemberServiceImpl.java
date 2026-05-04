@@ -4,8 +4,12 @@ import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.request.SignUpReqDTO;
 import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
 import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.exception.MemberException;
+import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.region.entity.Region;
+import com.example.umc10th.domain.region.exception.RegionException;
+import com.example.umc10th.domain.region.exception.code.RegionErrorCode;
 import com.example.umc10th.domain.region.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +28,11 @@ public class MemberServiceImpl implements MemberService {
     public SignUpResDTO signUp(SignUpReqDTO request) {
 
         if (memberRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new MemberException(MemberErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         Region region = regionRepository.findById(request.regionId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지역입니다."));
+                .orElseThrow(() -> new RegionException(RegionErrorCode.REGION_NOT_FOUND));
 
         Member member = MemberConverter.toMember(request, region);
 
