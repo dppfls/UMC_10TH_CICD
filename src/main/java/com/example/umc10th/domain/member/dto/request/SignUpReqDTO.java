@@ -1,46 +1,40 @@
 package com.example.umc10th.domain.member.dto.request;
 
 import com.example.umc10th.domain.member.enums.Gender;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record SignUpReqDTO (
 
-        @Email
-        @NotBlank
-        String email,
+        @NotBlank(message = "닉네임은 필수입니다.")
+        String nickname,
 
-        @NotBlank
-        String password,
-
-        @NotBlank
-        String name,
-
-        @NotNull
+        @NotNull(message = "성별은 필수입니다.")
         Gender gender,
 
-        @NotNull
+        @NotNull(message = "생년월일은 필수입니다.")
         LocalDate birth,
 
-        @NotBlank
+        @NotBlank(message = "주소는 필수입니다.")
         String address,
 
-        @NotEmpty
-        List<Long> preferredFoodIds,
+        @NotBlank(message = "전화번호는 필수입니다.")
+        String phone,
 
-        @Valid
-        @NotEmpty
-        List<TermConsentRequest> termsConsents
+        @NotNull(message = "전화번호 인증 여부는 필수입니다.")
+        Boolean phoneVerified,
 
+        @NotBlank(message = "이메일은 필수입니다.")
+        @Email(message = "올바른 이메일 형식이어야 합니다.")
+        String email,
+
+        @NotBlank(message = "비밀번호는 필수입니다.")
+        String password,
+
+        @NotNull(message = "지역 ID는 필수입니다.")
+        Long regionId
 ) {
-    public record TermConsentRequest(
-            @NotNull Long termId,
-            @NotNull Boolean isAgreed
-    ) {}
 }

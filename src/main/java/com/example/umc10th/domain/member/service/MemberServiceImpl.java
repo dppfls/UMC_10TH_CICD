@@ -3,14 +3,37 @@ package com.example.umc10th.domain.member.service;
 import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.request.SignUpReqDTO;
 import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
+import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.domain.region.entity.Region;
+import com.example.umc10th.domain.region.repository.RegionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
+    private final MemberRepository memberRepository;
+    private final RegionRepository regionRepository;
+
     @Override
+    @Transactional
     public SignUpResDTO signUp(SignUpReqDTO request) {
-        // 나중에 구현
-        return MemberConverter.toSignUpResDTO(1L);
+
+        if (memberRepository.existsByEmail(request.email())) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+
+        Region region = regionRepository.findById(request.regionId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 지역입니다."));
+
+        Member member = MemberConverter.toMember(request, region);
+
+        Member savedMember = memberRepository.save(member);
+
+        return MemberConverter.toSignUpResDTO(savedMember);
     }
 }

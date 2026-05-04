@@ -37,3 +37,5 @@ public class MemberTerm extends BaseEntity {
     @Column(name = "is_agreed", nullable = false)
     private Boolean isAgreed;
 }
+
+
