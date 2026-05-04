@@ -2,6 +2,7 @@ package com.example.umc10th.domain.member.service;
 
 import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.request.SignUpReqDTO;
+import com.example.umc10th.domain.member.dto.response.MyPageResDTO;
 import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.MemberException;
@@ -39,5 +40,14 @@ public class MemberServiceImpl implements MemberService {
         Member savedMember = memberRepository.save(member);
 
         return MemberConverter.toSignUpResDTO(savedMember);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MyPageResDTO getMyPage(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        return MemberConverter.toMyPageResDTO(member);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.member.converter;
 
 import com.example.umc10th.domain.member.dto.request.SignUpReqDTO;
+import com.example.umc10th.domain.member.dto.response.MyPageResDTO;
 import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.entity.MemberAuth;
@@ -37,6 +38,17 @@ public class MemberConverter {
                 member.getId(),
                 member.getNickname(),
                 member.getEmail()
+        );
+    }
+
+    public static MyPageResDTO toMyPageResDTO(Member member) {
+        return new MyPageResDTO(
+                member.getId(),
+                member.getNickname(),
+                member.getEmail(),
+                member.getPhone(),
+                member.getPhoneVerified(),
+                member.getPoint()
         );
     }
 }
