@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "nickname", length = 10, nullable = false)
+    @Column(name = "nickname", length = 20, nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)

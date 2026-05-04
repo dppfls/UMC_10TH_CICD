@@ -32,6 +32,6 @@ public class MemberMission extends BaseEntity {
     @Column(name = "is_complete", nullable = false)
     private Boolean isComplete;
 
-    @Column(name = "completed_at", nullable = false)
+    @Column(name = "completed_at")
     private LocalDateTime completedAt;
 }
