@@ -20,11 +20,12 @@ public class HomeController {
     // 홈화면 조회
     @GetMapping
     public ApiResponse<HomeResDTO> getHome(
+            @RequestParam Long memberId,
             @RequestParam(required = false) Long cursor
     ) {
         return ApiResponse.onSuccess(
                 MissionSuccessCode.HOME_INFO_FOUND,
-                homeService.getHome(cursor)
+                homeService.getHome(memberId, cursor)
         );
     }
 }

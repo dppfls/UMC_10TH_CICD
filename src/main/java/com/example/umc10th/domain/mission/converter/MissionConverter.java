@@ -3,6 +3,7 @@ package com.example.umc10th.domain.mission.converter;
 import com.example.umc10th.domain.mission.dto.response.HomeResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionListResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionStatusUpdateResDTO;
+import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 
 import java.util.List;
@@ -27,19 +28,13 @@ public class MissionConverter {
         );
     }
 
-    public static HomeResDTO.HomeMissionPreview toHomeMissionPreview(
-            Long missionId,
-            String storeName,
-            String condition,
-            Integer point,
-            String deadline
-    ) {
+    public static HomeResDTO.HomeMissionPreview toHomeMissionPreview(Mission mission) {
         return new HomeResDTO.HomeMissionPreview(
-                missionId,
-                storeName,
-                condition,
-                point,
-                deadline
+                mission.getId(),
+                mission.getStore().getName(),
+                mission.getCondition(),
+                mission.getPoint(),
+                mission.getEndedAt().toString()
         );
     }
 
@@ -52,24 +47,6 @@ public class MissionConverter {
                 missions,
                 nextCursor,
                 hasNext
-        );
-    }
-
-    public static MissionListResDTO.MissionPreview toMissionPreview(
-            Long missionId,
-            String storeName,
-            String condition,
-            Integer point,
-            String deadline,
-            String status
-    ) {
-        return new MissionListResDTO.MissionPreview(
-                missionId,
-                storeName,
-                condition,
-                point,
-                deadline,
-                status
         );
     }
 

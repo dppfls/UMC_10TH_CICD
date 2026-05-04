@@ -11,22 +11,26 @@ import java.util.List;
 public interface MissionRepository extends JpaRepository<Mission, Long> {
 
     @Query("""
-        select m
-        from Mission m
-        join fetch m.store s
-        join fetch s.region r
-        where r.id = :regionId
-          and (:cursor is null or m.id < :cursor)
-          and m.id not in (
-              select mm.mission.id
-              from MemberMission mm
-              where mm.member.id = :memberId
-          )
-        order by m.id desc
-    """)
-    List<Mission> findAvailableMissionsByRegion(
+            select m
+            from Mission m
+            join fetch m.store s
+            where s.region.id = (
+                select mem.region.id
+                from Member mem
+                where mem.id = :memberId
+            )
+              and m.endedAt >= current_date
+              and not exists (
+                  select 1
+                  from MemberMission mm
+                  where mm.member.id = :memberId
+                    and mm.mission.id = m.id
+              )
+              and (:cursor is null or m.id < :cursor)
+            order by m.id desc
+            """)
+    List<Mission> findAvailableMissionsByMemberRegion(
             @Param("memberId") Long memberId,
-            @Param("regionId") Long regionId,
             @Param("cursor") Long cursor,
             Pageable pageable
     );

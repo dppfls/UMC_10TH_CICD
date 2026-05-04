@@ -42,4 +42,14 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
             @Param("cursor") Long cursor,
             Pageable pageable
     );
+
+    @Query("""
+        select count(mm)
+        from MemberMission mm
+        where mm.member.id = :memberId
+          and mm.isComplete = true
+        """)
+    Integer countCompletedMissionsByMemberId(
+            @Param("memberId") Long memberId
+    );
 }
