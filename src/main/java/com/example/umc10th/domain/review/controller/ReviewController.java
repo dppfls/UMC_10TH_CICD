@@ -20,11 +20,12 @@ public class ReviewController {
     @PostMapping("/{storeId}/reviews")
     public ApiResponse<ReviewCreateResDTO> createReview(
             @PathVariable Long storeId,
+            @RequestParam Long memberId,
             @RequestBody @Valid ReviewCreateReqDTO request
     ) {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.REVIEW_CREATED,
-                reviewService.createReview(storeId, request)
+                reviewService.createReview(storeId, memberId, request)
         );
     }
 }

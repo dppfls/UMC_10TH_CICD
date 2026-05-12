@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.mission.exception.code;
+package com.example.umc10th.domain.region.exception.code;
 
 import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
 import lombok.Getter;
@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum MissionErrorCode implements BaseErrorCode {
+public enum RegionErrorCode implements BaseErrorCode {
 
-    INVALID_MISSION_STATUS(HttpStatus.BAD_REQUEST,
-            "INVALID_MISSION_STATUS",
-            "올바르지 않은 미션 상태입니다.");
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND,
+            "REGION_NOT_FOUND",
+            "존재하지 않는 지역입니다.");
 
     private final HttpStatus status;
     private final String code;

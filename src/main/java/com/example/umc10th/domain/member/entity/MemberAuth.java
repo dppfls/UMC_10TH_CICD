@@ -36,4 +36,16 @@ public class MemberAuth extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public static MemberAuth createLocalAuth(String email, String password) {
+        MemberAuth memberAuth = new MemberAuth();
+        memberAuth.providerType = ProviderType.LOCAL;
+        memberAuth.providerUid = email;
+        memberAuth.password = password;
+        return memberAuth;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

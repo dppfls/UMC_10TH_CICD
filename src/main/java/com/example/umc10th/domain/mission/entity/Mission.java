@@ -23,7 +23,7 @@ public class Mission extends BaseEntity {
     @Column(name = "point", nullable = false)
     private Integer point;
 
-    @Column(name = "condition", length = 255, nullable = false)
+    @Column(name = "mission_condition", length = 255, nullable = false)
     private String condition;
 
     @Column(name = "ended_at", nullable = false)

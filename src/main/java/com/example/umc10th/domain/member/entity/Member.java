@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "nickname", length = 10, nullable = false)
+    @Column(name = "nickname", length = 20, nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -69,9 +69,33 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberAuth> memberAuthList = new ArrayList<>();
 
-    public static Member createTempMember(Long id) {
+    public static Member createMember(
+            String nickname,
+            Gender gender,
+            LocalDate birth,
+            String address,
+            String phone,
+            Boolean phoneVerified,
+            String email,
+            Region region
+    ) {
         Member member = new Member();
-        member.id = id;
+        member.nickname = nickname;
+        member.gender = gender;
+        member.birth = birth;
+        member.address = address;
+        member.status = Status.ACTIVE;
+        member.role = Role.USER;
+        member.point = 0;
+        member.phone = phone;
+        member.phoneVerified = phoneVerified;
+        member.email = email;
+        member.region = region;
         return member;
+    }
+
+    public void addMemberAuth(MemberAuth memberAuth) {
+        this.memberAuthList.add(memberAuth);
+        memberAuth.setMember(this);
     }
 }

@@ -1,4 +1,19 @@
 package com.example.umc10th.domain.review.exception.code;
 
-public enum ReviewErrorCode {
+import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@RequiredArgsConstructor
+public enum ReviewErrorCode implements BaseErrorCode {
+
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND,
+            "STORE_NOT_FOUND",
+            "존재하지 않는 가게입니다.");
+
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
 }

@@ -39,4 +39,18 @@ public class Review extends BaseEntity {
 
     @OneToOne(mappedBy = "review", fetch = FetchType.LAZY)
     private ReviewReply reviewReply;
+
+    public static Review createReview(
+            BigDecimal star,
+            String content,
+            Member member,
+            Store store
+    ) {
+        Review review = new Review();
+        review.star = star;
+        review.content = content;
+        review.member = member;
+        review.store = store;
+        return review;
+    }
 }
