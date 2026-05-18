@@ -2,11 +2,10 @@ package com.example.umc10th.domain.mission.repository;
 
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
 
@@ -19,7 +18,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
           and mm.isComplete = true
         order by mm.id desc
         """)
-    List<MemberMission> findCompletedMissions(
+    Slice<MemberMission> findCompletedMissions(
             @Param("memberId") Long memberId,
             Pageable pageable
     );
@@ -34,7 +33,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
           and m.endedAt >= current_date
         order by mm.id desc
         """)
-    List<MemberMission> findInProgressMissions(
+    Slice<MemberMission> findInProgressMissions(
             @Param("memberId") Long memberId,
             Pageable pageable
     );

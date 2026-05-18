@@ -10,6 +10,7 @@ import com.example.umc10th.domain.mission.eums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +34,9 @@ public class MissionServiceImpl implements MissionService {
             MissionStatus status,
             Integer page
     ) {
-        PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE + 1);
+        PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE);
 
-        List<MemberMission> memberMissions = switch (status) {
+        Slice<MemberMission> memberMissionSlice  = switch (status) {
             case IN_PROGRESS -> memberMissionRepository.findInProgressMissions(
                     request.memberId(),
                     pageRequest
@@ -46,11 +47,7 @@ public class MissionServiceImpl implements MissionService {
             );
         };
 
-        boolean hasNext = memberMissions.size() > PAGE_SIZE;
-
-        if (hasNext) {
-            memberMissions = memberMissions.subList(0, PAGE_SIZE);
-        }
+        List<MemberMission> memberMissions = memberMissionSlice.getContent();
 
         List<MissionListResDTO.MissionPreview> missions = memberMissions.stream()
                 .map(MissionConverter::toMissionPreview)
@@ -59,7 +56,7 @@ public class MissionServiceImpl implements MissionService {
         return MissionConverter.toMissionListResDTO(
                 missions,
                 page,
-                hasNext
+                memberMissionSlice.hasNext()
         );
     }
 

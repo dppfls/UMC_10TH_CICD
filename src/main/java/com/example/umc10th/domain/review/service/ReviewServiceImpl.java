@@ -17,6 +17,7 @@ import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,9 +66,9 @@ public class ReviewServiceImpl implements ReviewService {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
 
-        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE + 1);
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE);
 
-        List<Review> reviews = switch (sort) {
+        Slice<Review> reviewSlice = switch (sort) {
             case ID -> reviewRepository.findMyReviewsOrderByIdDesc(
                     memberId,
                     cursor,
@@ -81,17 +82,13 @@ public class ReviewServiceImpl implements ReviewService {
             );
         };
 
-        boolean hasNext = reviews.size() > PAGE_SIZE;
+        List<Review> reviews = reviewSlice.getContent();
 
-        if (hasNext) {
-            reviews = reviews.subList(0, PAGE_SIZE);
-        }
-
-        Long nextCursor = hasNext
+        Long nextCursor = reviewSlice.hasNext()
                 ? reviews.get(reviews.size() - 1).getId()
                 : null;
 
-        BigDecimal nextStarCursor = hasNext && sort == ReviewSortType.STAR
+        BigDecimal nextStarCursor = reviewSlice.hasNext() && sort == ReviewSortType.STAR
                 ? reviews.get(reviews.size() - 1).getStar()
                 : null;
 
@@ -103,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
                 reviewPreviews,
                 nextCursor,
                 nextStarCursor,
-                hasNext
+                reviewSlice.hasNext()
         );
     }
 }
