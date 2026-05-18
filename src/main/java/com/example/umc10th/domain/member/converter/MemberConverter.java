@@ -11,7 +11,11 @@ public class MemberConverter {
 
     private MemberConverter() {}
 
-    public static Member toMember(SignUpReqDTO request, Region region) {
+    public static Member toMember(
+            SignUpReqDTO request,
+            Region region,
+            String encodedPassword
+    ) {
         Member member = Member.createMember(
                 request.nickname(),
                 request.gender(),
@@ -25,7 +29,7 @@ public class MemberConverter {
 
         MemberAuth memberAuth = MemberAuth.createLocalAuth(
                 request.email(),
-                request.password()
+                encodedPassword
         );
 
         member.addMemberAuth(memberAuth);
