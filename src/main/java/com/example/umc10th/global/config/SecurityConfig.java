@@ -21,8 +21,7 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/v3/api-docs/**",
 
-            // 로그인
-            "/api/v1/auth/**"
+            "/api/v1/auth/singup"
     };
 
     @Bean
