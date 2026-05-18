@@ -40,12 +40,12 @@ public class MissionConverter {
 
     public static MissionListResDTO toMissionListResDTO(
             List<MissionListResDTO.MissionPreview> missions,
-            Long nextCursor,
+            Integer page,
             Boolean hasNext
     ) {
         return new MissionListResDTO(
                 missions,
-                nextCursor,
+                page,
                 hasNext
         );
     }

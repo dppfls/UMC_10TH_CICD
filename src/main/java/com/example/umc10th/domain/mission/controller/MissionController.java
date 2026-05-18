@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.mission.controller;
 
+import com.example.umc10th.domain.mission.dto.request.MissionListReqDTO;
 import com.example.umc10th.domain.mission.dto.request.MissionStatusUpdateReqDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionListResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionStatusUpdateResDTO;
@@ -19,15 +20,16 @@ public class MissionController {
     private final MissionService missionService;
 
     // 미션 목록 조회 (진행중, 진행 완료)
-    @GetMapping
+    // 오프셋 기반 페이지네이션
+    @PostMapping("/{status}")
     public ApiResponse<MissionListResDTO> getMissions(
-            @RequestParam Long memberId,
-            @RequestParam MissionStatus status,
-            @RequestParam(required = false) Long cursor
+            @PathVariable MissionStatus status,
+            @RequestBody @Valid MissionListReqDTO request,
+            @RequestParam(defaultValue = "0") Integer page
     ) {
         return ApiResponse.onSuccess(
                 MissionSuccessCode.MISSION_LIST_FOUND,
-                missionService.getMissions(memberId, status, cursor)
+                missionService.getMissions(request, status, page)
         );
     }
 

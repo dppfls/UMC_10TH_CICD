@@ -11,35 +11,31 @@ import java.util.List;
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
 
     @Query("""
-            select mm
-            from MemberMission mm
-            join fetch mm.mission m
-            join fetch m.store s
-            where mm.member.id = :memberId
-              and mm.isComplete = true
-              and (:cursor is null or mm.id < :cursor)
-            order by mm.id desc
-            """)
+        select mm
+        from MemberMission mm
+        join fetch mm.mission m
+        join fetch m.store s
+        where mm.member.id = :memberId
+          and mm.isComplete = true
+        order by mm.id desc
+        """)
     List<MemberMission> findCompletedMissions(
             @Param("memberId") Long memberId,
-            @Param("cursor") Long cursor,
             Pageable pageable
     );
 
     @Query("""
-            select mm
-            from MemberMission mm
-            join fetch mm.mission m
-            join fetch m.store s
-            where mm.member.id = :memberId
-              and mm.isComplete = false
-              and m.endedAt >= current_date
-              and (:cursor is null or mm.id < :cursor)
-            order by mm.id desc
-            """)
+        select mm
+        from MemberMission mm
+        join fetch mm.mission m
+        join fetch m.store s
+        where mm.member.id = :memberId
+          and mm.isComplete = false
+          and m.endedAt >= current_date
+        order by mm.id desc
+        """)
     List<MemberMission> findInProgressMissions(
             @Param("memberId") Long memberId,
-            @Param("cursor") Long cursor,
             Pageable pageable
     );
 
