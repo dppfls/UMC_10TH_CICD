@@ -8,14 +8,20 @@ import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.mission.repository.StoreRepository;
 import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.request.ReviewCreateReqDTO;
+import com.example.umc10th.domain.review.dto.response.MyReviewListResDTO;
 import com.example.umc10th.domain.review.dto.response.ReviewCreateResDTO;
 import com.example.umc10th.domain.review.entity.Review;
+import com.example.umc10th.domain.review.enums.ReviewSortType;
 import com.example.umc10th.domain.review.exception.ReviewException;
 import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
+
+    private static final int PAGE_SIZE = 10;
 
     @Override
     @Transactional
@@ -44,5 +52,58 @@ public class ReviewServiceImpl implements ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return ReviewConverter.toReviewCreateResDTO(savedReview);
+    }
+
+    @Override
+    public MyReviewListResDTO getMyReviews(
+            Long memberId,
+            ReviewSortType sort,
+            Long cursor,
+            BigDecimal starCursor
+    ) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE + 1);
+
+        List<Review> reviews = switch (sort) {
+            case ID -> reviewRepository.findMyReviewsOrderByIdDesc(
+                    memberId,
+                    cursor,
+                    pageRequest
+            );
+            case STAR -> reviewRepository.findMyReviewsOrderByStarDesc(
+                    memberId,
+                    starCursor,
+                    cursor,
+                    pageRequest
+            );
+        };
+
+        boolean hasNext = reviews.size() > PAGE_SIZE;
+
+        if (hasNext) {
+            reviews = reviews.subList(0, PAGE_SIZE);
+        }
+
+        Long nextCursor = hasNext
+                ? reviews.get(reviews.size() - 1).getId()
+                : null;
+
+        BigDecimal nextStarCursor = hasNext && sort == ReviewSortType.STAR
+                ? reviews.get(reviews.size() - 1).getStar()
+                : null;
+
+        List<MyReviewListResDTO.MyReviewPreview> reviewPreviews = reviews.stream()
+                .map(ReviewConverter::toMyReviewPreview)
+                .toList();
+
+        return ReviewConverter.toMyReviewListResDTO(
+                reviewPreviews,
+                nextCursor,
+                nextStarCursor,
+                hasNext
+        );
     }
 }

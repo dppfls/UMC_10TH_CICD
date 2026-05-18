@@ -3,6 +3,7 @@ package com.example.umc10th.domain.review.converter;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.review.dto.request.ReviewCreateReqDTO;
+import com.example.umc10th.domain.review.dto.response.MyReviewListResDTO;
 import com.example.umc10th.domain.review.dto.response.ReviewCreateResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 
@@ -35,4 +36,29 @@ public class ReviewConverter {
                 List.of()
         );
     }
+
+    public static MyReviewListResDTO.MyReviewPreview toMyReviewPreview(Review review) {
+        return new MyReviewListResDTO.MyReviewPreview(
+                review.getId(),
+                review.getStore().getName(),
+                review.getStar(),
+                review.getContent(),
+                review.getCreatedAt().toString()
+        );
+    }
+
+    public static MyReviewListResDTO toMyReviewListResDTO(
+            List<MyReviewListResDTO.MyReviewPreview> reviews,
+            Long nextCursor,
+            BigDecimal nextStarCursor,
+            Boolean hasNext
+    ) {
+        return new MyReviewListResDTO(
+                reviews,
+                nextCursor,
+                nextStarCursor,
+                hasNext
+        );
+    }
+
 }
