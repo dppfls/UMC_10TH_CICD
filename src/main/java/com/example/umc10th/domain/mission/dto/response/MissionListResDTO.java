@@ -4,7 +4,7 @@ import java.util.List;
 
 public record MissionListResDTO(
         List<MissionPreview> missions,
-        Long nextCursor,
+        Integer page,
         Boolean hasNext
 ) {
     public record MissionPreview(

@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.mission.service;
 
 import com.example.umc10th.domain.mission.converter.MissionConverter;
+import com.example.umc10th.domain.mission.dto.request.MissionListReqDTO;
 import com.example.umc10th.domain.mission.dto.request.MissionStatusUpdateReqDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionListResDTO;
 import com.example.umc10th.domain.mission.dto.response.MissionStatusUpdateResDTO;
@@ -9,6 +10,7 @@ import com.example.umc10th.domain.mission.eums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,40 +30,34 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionListResDTO getMissions(
-            Long memberId,
+            MissionListReqDTO request,
             MissionStatus status,
-            Long cursor
+            Integer page
     ) {
-        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE + 1);
+        PageRequest pageRequest = PageRequest.of(page, PAGE_SIZE);
 
-        List<MemberMission> memberMissions = switch (status) {
+        Slice<MemberMission> memberMissionSlice  = switch (status) {
             case IN_PROGRESS -> memberMissionRepository.findInProgressMissions(
-                    memberId,
-                    cursor,
+                    request.memberId(),
                     pageRequest
             );
             case COMPLETED -> memberMissionRepository.findCompletedMissions(
-                    memberId,
-                    cursor,
+                    request.memberId(),
                     pageRequest
             );
         };
 
-        boolean hasNext = memberMissions.size() > PAGE_SIZE;
-
-        if (hasNext) {
-            memberMissions = memberMissions.subList(0, PAGE_SIZE);
-        }
-
-        Long nextCursor = hasNext
-                ? memberMissions.get(memberMissions.size() - 1).getId()
-                : null;
+        List<MemberMission> memberMissions = memberMissionSlice.getContent();
 
         List<MissionListResDTO.MissionPreview> missions = memberMissions.stream()
                 .map(MissionConverter::toMissionPreview)
                 .toList();
 
-        return MissionConverter.toMissionListResDTO(missions, nextCursor, hasNext);
+        return MissionConverter.toMissionListResDTO(
+                missions,
+                page,
+                memberMissionSlice.hasNext()
+        );
     }
 
     @Override
