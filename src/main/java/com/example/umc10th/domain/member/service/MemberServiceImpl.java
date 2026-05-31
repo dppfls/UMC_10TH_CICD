@@ -13,6 +13,7 @@ import com.example.umc10th.domain.region.exception.RegionException;
 import com.example.umc10th.domain.region.exception.code.RegionErrorCode;
 import com.example.umc10th.domain.region.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final RegionRepository regionRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -35,7 +37,9 @@ public class MemberServiceImpl implements MemberService {
         Region region = regionRepository.findById(request.regionId())
                 .orElseThrow(() -> new RegionException(RegionErrorCode.REGION_NOT_FOUND));
 
-        Member member = MemberConverter.toMember(request, region);
+        String encodedPassword = passwordEncoder.encode(request.password());
+
+        Member member = MemberConverter.toMember(request, region, encodedPassword);
 
         Member savedMember = memberRepository.save(member);
 
