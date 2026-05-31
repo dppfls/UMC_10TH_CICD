@@ -15,6 +15,9 @@ public enum MemberErrorCode implements BaseErrorCode {
     EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,
             "EMAIL_ALREADY_EXISTS",
             "이미 사용 중인 이메일입니다."),
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED,
+            "LOGIN_FAILED",
+            "이메일 또는 비밀번호가 일치하지 않습니다."),
     ;
 
     private final HttpStatus status;

@@ -1,21 +1,28 @@
 package com.example.umc10th.domain.member.service;
 
 import com.example.umc10th.domain.member.converter.MemberConverter;
+import com.example.umc10th.domain.member.dto.request.LoginReqDTO;
 import com.example.umc10th.domain.member.dto.request.SignUpReqDTO;
+import com.example.umc10th.domain.member.dto.response.LoginResDTO;
 import com.example.umc10th.domain.member.dto.response.MyPageResDTO;
 import com.example.umc10th.domain.member.dto.response.SignUpResDTO;
 import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.entity.MemberAuth;
+import com.example.umc10th.domain.member.enums.ProviderType;
 import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
+import com.example.umc10th.domain.member.repository.MemberAuthRepository;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.region.entity.Region;
 import com.example.umc10th.domain.region.exception.RegionException;
 import com.example.umc10th.domain.region.exception.code.RegionErrorCode;
 import com.example.umc10th.domain.region.repository.RegionRepository;
+import com.example.umc10th.global.security.member.AuthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.umc10th.global.security.util.JwtUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +32,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final RegionRepository regionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberAuthRepository memberAuthRepository;
+    private final JwtUtil jwtUtil;
 
     @Override
     @Transactional
@@ -47,11 +56,28 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public MyPageResDTO getMyPage(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    public MyPageResDTO getMyPage(AuthMember authMember) {
 
-        return MemberConverter.toMyPageResDTO(member);
+        return MemberConverter.toMyPageResDTO(authMember.getMember());
+    }
+
+    @Override
+    public LoginResDTO login(LoginReqDTO request) {
+        MemberAuth memberAuth = memberAuthRepository
+                .findByProviderTypeAndProviderUid(ProviderType.LOCAL, request.email())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.LOGIN_FAILED));
+
+        if (!passwordEncoder.matches(request.password(), memberAuth.getPassword())) {
+            throw new MemberException(MemberErrorCode.LOGIN_FAILED);
+        }
+
+        AuthMember authMember = new AuthMember(memberAuth.getMember(), memberAuth);
+
+        String accessToken = jwtUtil.createAccessToken(authMember);
+
+        return new LoginResDTO(
+                memberAuth.getMember().getId(),
+                accessToken
+        );
     }
 }
