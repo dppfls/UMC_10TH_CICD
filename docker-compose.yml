@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: rlayerin/umc-10th-cicd:latest
     container_name: spring-app
     env_file:
       - .env
