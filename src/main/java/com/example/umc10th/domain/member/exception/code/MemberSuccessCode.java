@@ -18,6 +18,9 @@ public enum MemberSuccessCode implements BaseSuccessCode {
     MYPAGE_FOUND(HttpStatus.OK,
             "MYPAGE_FOUND",
             "성공적으로 마이페이지 정보를 조회했습니다."),
+    LOGIN_SUCCESS(HttpStatus.OK,
+            "LOGIN_SUCCESS",
+            "로그인에 성공했습니다."),
     ;
 
     private final HttpStatus status;

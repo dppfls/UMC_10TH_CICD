@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             String username
     ) throws UsernameNotFoundException {
         MemberAuth memberAuth = memberAuthRepository
-                .findByProviderTypeAndProviderUid(ProviderType.LOCAL, username)
+                .findByProviderTypeAndProviderUidWithMember(ProviderType.LOCAL, username)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         return new AuthMember(memberAuth.getMember(), memberAuth);
